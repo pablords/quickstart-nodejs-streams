@@ -1,0 +1,90 @@
+Started by user unknown or anonymous
+[Pipeline] Start of Pipeline
+[Pipeline] podTemplate
+[Pipeline] {
+[Pipeline] node
+Created Pod: kubernetes jenkins/kubeconfig-11-6hdv1-lplxn-ln28s
+Agent kubeconfig-11-6hdv1-lplxn-ln28s is provisioned from template kubeconfig_11-6hdv1-lplxn
+---
+apiVersion: "v1"
+kind: "Pod"
+metadata:
+  annotations:
+    buildUrl: "http://192.168.1.33:8080/job/kubeconfig/11/"
+    runUrl: "job/kubeconfig/11/"
+  labels:
+    jenkins: "slave"
+    jenkins/label-digest: "ec4886ce94b9e8aaa98d6b782ebb2477326ccec2"
+    jenkins/label: "kubeconfig_11-6hdv1"
+  name: "kubeconfig-11-6hdv1-lplxn-ln28s"
+spec:
+  containers:
+  - args:
+    - "99d"
+    command:
+    - "sleep"
+    image: "pablords/kubectl:latest"
+    imagePullPolicy: "IfNotPresent"
+    name: "kubectl"
+    resources:
+      limits: {}
+      requests: {}
+    tty: false
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  - env:
+    - name: "JENKINS_SECRET"
+      value: "********"
+    - name: "JENKINS_AGENT_NAME"
+      value: "kubeconfig-11-6hdv1-lplxn-ln28s"
+    - name: "JENKINS_NAME"
+      value: "kubeconfig-11-6hdv1-lplxn-ln28s"
+    - name: "JENKINS_AGENT_WORKDIR"
+      value: "/home/jenkins/agent"
+    - name: "JENKINS_URL"
+      value: "http://192.168.1.33:8080/"
+    image: "jenkins/inbound-agent:4.11-1-jdk11"
+    name: "jnlp"
+    resources:
+      limits: {}
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  nodeSelector:
+    kubernetes.io/os: "linux"
+  restartPolicy: "Never"
+  volumes:
+  - emptyDir:
+      medium: ""
+    name: "workspace-volume"
+
+Running on kubeconfig-11-6hdv1-lplxn-ln28s in /home/jenkins/agent/workspace/kubeconfig
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (get secret)
+[Pipeline] container
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (decode base64)
+[Pipeline] withVault
+Retrieving secret: kv/jenkins/kubeconfig
+Aborted by unknown
+[Pipeline] // withVault
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // container
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // podTemplate
+[Pipeline] End of Pipeline
+Finished: ABORTED
