@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "nodemon src/client.js",
-    "server": "nodemon src/server.js"
+    "client-jenkins": "nodemon src/log-jenkins/client.js",
+    "server-jenkins": "nodemon src/log-jenkins/server.js",
+    "process-data": "nodemon --max-old-space-size=8000 src/process-data-mysql"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,8 @@
     "nodemon": "^2.0.15"
   },
   "dependencies": {
-    "axios": "^0.26.1"
+    "axios": "^0.26.1",
+    "csv": "^6.0.5",
+    "mysql": "github:mysqljs/mysql"
   }
 }

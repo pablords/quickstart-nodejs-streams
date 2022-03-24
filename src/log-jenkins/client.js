@@ -22,10 +22,10 @@ stream.pipe(
     new Transform({
         transform(chunk, enc, cb) {
             const item = JSON.parse(chunk)
-            const myNumber = /\d+/.exec(item.name)[0]
-            let name = item.name
-            if (myNumber % 2 == 0) name = name.concat(" é par")
-            else name = name.concat(" é impar")
+            // const myNumber = /\d+/.exec(item.name)[0]
+            // let name = item.name
+            // if (myNumber % 2 == 0) name = name.concat(" é par")
+            // else name = name.concat(" é impar")
 
             cb(null, JSON.stringify(item))
         }
