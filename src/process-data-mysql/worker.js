@@ -8,7 +8,7 @@ async function readCsv() {
 
     const startTime = new Date()
     console.log("hora do inicio: " + startTime.toLocaleTimeString("pt-br"))
-    var csvData = [];
+    let csvDataList = [];
     fs.createReadStream(file)
         .pipe(parse({ delimiter: ',' }))
 
@@ -30,11 +30,11 @@ async function readCsv() {
                 TotalProfit: csvrow[13]
             }
 
-            csvData.push(data);
+            csvDataList.push(data);
 
-            if (csvData.length == 300) {
-                insertDataIntoDb(csvData)
-                csvData = []
+            if (csvDataList.length == 300) {
+                insertDataIntoDb(csvDataList)
+                csvDataList = []
             }
         })
         .on('end', function () {
