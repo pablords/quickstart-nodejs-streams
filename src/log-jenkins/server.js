@@ -1,6 +1,5 @@
 import http from "http"
 import { Readable } from "stream"
-import { randomUUID } from "crypto"
 import axios from "axios"
 import fs from "fs"
 
@@ -26,16 +25,8 @@ const getLog = async () => {
 
 //function generator a medida que processa retorna para quem chamou
 function* run() {
-
-
     for (let index = 0; index < 10; index++) {
-        // const data = {
-        //     id: randomUUID(),
-        //     name: `Pablo-${index}`
-        // }
-
         const file = fs.readFileSync("./log.txt", { encoding: "utf8" });
-
         // ele nao aguarda o for terminar. a medida que processa ja passa para frente
         yield file
 

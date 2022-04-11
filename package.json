@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "client-jenkins": "nodemon src/log-jenkins/client.js",
     "server-jenkins": "nodemon src/log-jenkins/server.js",
-    "process-data": "nodemon --max-old-space-size=8000 src/process-data-mysql"
+    "process-data": "node --max-old-space-size=8000 src/process-data-mysql"
   },
   "keywords": [],
   "author": "",

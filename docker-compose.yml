@@ -6,9 +6,7 @@ services:
     restart: always
     container_name: db-stream
     ports:
-      - 3306:3306
-    expose:
-      - 3306
+      - 3307:3306
     volumes:
       - mysql:/var/lib/mysql
     environment:
