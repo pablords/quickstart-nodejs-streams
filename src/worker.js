@@ -1,13 +1,16 @@
 import { parentPort, workerData } from "worker_threads"
 import { parse } from 'csv'
 import fs from "fs"
-import { pool, connection } from "./config.js"
+import { poolInsertData, poolCountData } from "./config/db.js"
+import { logger } from "./config/logger.js"
+import EventEmitter from "events"
 
+const eventEmitter = new EventEmitter();
 
 async function readCsv() {
-    const startTime = new Date()
-    console.log(`HORA DO INICIO: ${startTime.toLocaleTimeString("pt-br")}`)
+    logger.info("INICIANDO O PROCESSO")
     const { file } = workerData
+    let csvDataList = []
     fs.createReadStream(file)
         .pipe(parse({ delimiter: ',' }))
         .on('data', function (csvrow) {
@@ -27,32 +30,37 @@ async function readCsv() {
                 TotalCost: csvrow[12],
                 TotalProfit: csvrow[13]
             }
-            insertDataIntoDb(data)
+            csvDataList.push(data)
+            if (csvDataList.length == 300) {
+                insertDataIntoDb(data)
+                csvDataList = []
+            }
+
         })
         .on('end', function () {
-            console.log("finished reading process");
+            eventEmitter.emit('finish', "finished reading process");
         });
 
     parentPort.postMessage({ done: true });
 }
 
 function insertDataIntoDb(data) {
-    pool.query('INSERT INTO stream SET ?', data, (error) => { if (error) throw error; });
+    poolInsertData.query('INSERT INTO stream SET ?', data, (error) => { if (error) throw error; });
 }
 
 
 setInterval(querySelectDataCount, 5000)
 function querySelectDataCount() {
-    connection.query('SELECT count(*) FROM stream', (error, results) => {
+    poolCountData.query('SELECT count(*) FROM stream', (error, results) => {
         if (error) throw error;
         const countResult = results[0]['count(*)']
-        console.log(`QUANTIDADE DE LINHAS INSERIDAS ATÉ O MOMENTO: ${countResult}`)
-        if (countResult >= 10000) {
-            const endTime = new Date()
-            console.log(`HORA DO TÉRMINO: ${endTime.toLocaleTimeString("pt-br")}`)
-            process.exit(1)
-        }
+        logger.info(`QUANTIDADE DE LINHAS INSERIDAS ATÉ O MOMENTO: ${countResult}`, { cpu: process.cpuUsage(), memory: process.memoryUsage() })
     })
 }
+
+eventEmitter.on('finish', message => {
+    logger.info(`finish ${message}`);
+    process.exit(1)
+});
 
 readCsv()

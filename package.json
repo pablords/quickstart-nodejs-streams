@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=3000 HOST=localhost node --max-old-space-size=1024 src/"
+    "start": "PORT=3000 HOST=localhost NODE_ENV=denvelopment time node --max-old-space-size=1024 src/"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "csv": "^6.0.5",
-    "mysql": "github:mysqljs/mysql"
+    "mysql": "github:mysqljs/mysql",
+    "winston": "^3.8.1"
   }
 }

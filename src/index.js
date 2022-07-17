@@ -17,14 +17,12 @@ async function createWorker(file) {
 
 }
 
-
-
 const requestListener = function (req, res) {
     res.writeHead(200);
     res.end("Hello world!");
 };
 
-const start = () => {
+const main = () => {
     const file = path.resolve("data.csv")
     createWorker(file)
     const server = http.createServer(requestListener);
@@ -33,4 +31,4 @@ const start = () => {
     });
 }
 
-start()
+main()
