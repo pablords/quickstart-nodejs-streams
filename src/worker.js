@@ -6,7 +6,7 @@ import { pool, connection } from "./config.js"
 
 async function readCsv() {
     const startTime = new Date()
-    console.log("HORA DO INICIO: " + startTime.toLocaleTimeString("pt-br"))
+    console.log(`HORA DO INICIO: ${startTime.toLocaleTimeString("pt-br")}`)
     const { file } = workerData
     fs.createReadStream(file)
         .pipe(parse({ delimiter: ',' }))
