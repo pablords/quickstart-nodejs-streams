@@ -46,10 +46,10 @@ function querySelectDataCount() {
     connection.query('SELECT count(*) FROM stream', (error, results) => {
         if (error) throw error;
         const countResult = results[0]['count(*)']
-        console.log(countResult)
+        console.log(`QUANTIDADE DE LINHAS INSERIDAS ATÉ O MOMENTO: ${countResult}`)
         if (countResult >= 10000) {
             const endTime = new Date()
-            console.log("HORA DO TÉRMINO: " + endTime.toLocaleTimeString("pt-br"))
+            console.log(`HORA DO TÉRMINO: ${endTime.toLocaleTimeString("pt-br")}`)
             process.exit(1)
         }
     })
