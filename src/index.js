@@ -2,11 +2,9 @@ import { Worker } from "worker_threads"
 import path from "path"
 import http from "http"
 
-
-
-function createWorker(file) {
+async function createWorker(file) {
     return new Promise((resolve, reject) => {
-        const worker = new Worker(path.resolve("src/process-data-mysql/worker.js"), {
+        const worker = new Worker(path.resolve("src/worker.js"), {
             workerData: { file: file }
         })
         worker.on("message", resolve);
@@ -20,22 +18,19 @@ function createWorker(file) {
 }
 
 
-const host = 'localhost';
-const port = 8000;
 
 const requestListener = function (req, res) {
     res.writeHead(200);
     res.end("Hello world!");
 };
 
-const execute = () => {
+const start = () => {
     const file = path.resolve("data.csv")
     createWorker(file)
-
     const server = http.createServer(requestListener);
-    server.listen(port, host, () => {
-        console.log(`Server is running on http://${host}:${port}`);
+    server.listen(process.env.PORT, process.env.HOST, () => {
+        console.log(`Server is running on http://${process.env.HOST}:${process.env.PORT}`);
     });
 }
 
-execute()
+start()

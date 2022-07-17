@@ -14,8 +14,9 @@ export const pool = mysql.createPool({
     password: 'stream',
     database: 'stream',
     port: 3307,
-    connectionLimit: 500
+    connectionLimit: 100
 })
+
 
 connection.connect(function (err) {
     if (err) {
