@@ -19,7 +19,7 @@ services:
     image: prom/prometheus:v2.17.1
     container_name: prometheus
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./infra/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -43,7 +43,7 @@ services:
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -58,8 +58,8 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  app-streams:
-    container_name: app-streams
+  app:
+    container_name: app
     env_file: ./.env
     depends_on:
       - db-stream

@@ -7,7 +7,7 @@ class ProcessData {
     
     async upload(req, res) {
         createWorker(file)
-        res.send("ok")
+        res.send("processando...")
     }
 }
 
