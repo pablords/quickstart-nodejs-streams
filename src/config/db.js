@@ -1,30 +1,33 @@
 import mysql from "mysql"
 
 export const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'stream',
-    password: 'stream',
-    database: 'stream',
-    port: 3307,
+    host: process.env.DB_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.DB_PORT,
+    connectTimeout: 28800
 });
 
 export const poolInsertData = mysql.createPool({
-    host: 'localhost',
-    user: 'stream',
-    password: 'stream',
-    database: 'stream',
-    port: 3307,
-    connectionLimit: 90
+    host: process.env.DB_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.DB_PORT,
+    connectionLimit: 90,
+    connectTimeout: 28800
 })
 
 
 export const poolCountData = mysql.createPool({
-    host: 'localhost',
-    user: 'stream',
-    password: 'stream',
-    database: 'stream',
-    port: 3307,
-    connectionLimit: 10
+    host: process.env.DB_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.DB_PORT,
+    connectionLimit: 10,
+    connectTimeout: 28800
 })
 
 

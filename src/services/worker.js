@@ -1,14 +1,17 @@
 import { parentPort, workerData } from "worker_threads"
 import { parse } from 'csv'
 import fs from "fs"
-import { poolInsertData, poolCountData } from "./config/db.js"
-import { logger } from "./config/logger.js"
+import { poolInsertData, poolCountData } from "../config/db.js"
+import { logger } from "../config/logger.js"
 import EventEmitter from "events"
+import { format, differenceInMinutes, parseISO } from "date-fns"
 
 const eventEmitter = new EventEmitter();
 
+const startTime = format(new Date(), 'HH:mm')
+
 async function readCsv() {
-    logger.info("INICIANDO O PROCESSO")
+    logger.info("INICIANDO O PROCESSO", { startTime: startTime })
     const { file } = workerData
     let csvDataList = []
     fs.createReadStream(file)
@@ -38,7 +41,9 @@ async function readCsv() {
 
         })
         .on('end', function () {
-            eventEmitter.emit('finish', "finished reading process");
+            const endTime = format(new Date(), 'HH:mm')
+            const finalTime = differenceInMinutes(startTime, endTime)
+            eventEmitter.emit('finish', parseISO(finalTime).toISOString());
         });
 
     parentPort.postMessage({ done: true });
@@ -46,20 +51,20 @@ async function readCsv() {
 
 function insertDataIntoDb(data) {
     poolInsertData.query('INSERT INTO stream SET ?', data, (error) => { if (error) throw error; });
+    querySelectDataCount()
 }
 
 
-setInterval(querySelectDataCount, 5000)
 function querySelectDataCount() {
     poolCountData.query('SELECT count(*) FROM stream', (error, results) => {
         if (error) throw error;
         const countResult = results[0]['count(*)']
-        logger.info(`QUANTIDADE DE LINHAS INSERIDAS ATÉ O MOMENTO: ${countResult}`, { cpu: process.cpuUsage(), memory: process.memoryUsage() })
+        logger.info(`QUANTIDADE DE LINHAS INSERIDAS ATÉ O MOMENTO: ${countResult}`)
     })
 }
 
-eventEmitter.on('finish', message => {
-    logger.info(`finish ${message}`);
+eventEmitter.on('finish', endTime => {
+    logger.info(`finish ${endTime}`);
     process.exit(1)
 });
 

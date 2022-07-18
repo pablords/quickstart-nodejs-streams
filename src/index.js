@@ -1,34 +1,16 @@
-import { Worker } from "worker_threads"
-import path from "path"
-import http from "http"
 
-async function createWorker(file) {
-    return new Promise((resolve, reject) => {
-        const worker = new Worker(path.resolve("src/worker.js"), {
-            workerData: { file: file }
-        })
-        worker.on("message", resolve);
-        worker.on("error", reject);
-        worker.on("exit", code => {
-            if (code !== 0)
-                reject(new Error(`Worker stopped with exit code ${code}`));
-        });
-    });
+import express from "express"
+import { router } from "./routes.js"
+import cors from "cors"
 
-}
+const server = express()
+server.use(cors())
+server.use(express.json())
+server.use("/", router)
 
-const requestListener = function (req, res) {
-    res.writeHead(200);
-    res.end("Hello world!");
-};
+server.listen(process.env.PORT, () => {
+    console.log(`Server is running on http://${process.env.HOST}:${process.env.PORT}`);
+});
 
-const main = () => {
-    const file = path.resolve("data.csv")
-    createWorker(file)
-    const server = http.createServer(requestListener);
-    server.listen(process.env.PORT, process.env.HOST, () => {
-        console.log(`Server is running on http://${process.env.HOST}:${process.env.PORT}`);
-    });
-}
 
-main()
+
