@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   db-stream:
@@ -6,13 +6,17 @@ services:
     restart: always
     env_file: ./.env
     container_name: db-stream
+    #entrypoint: /home/prometheus/prom-config-db.sh
     networks:
       - monitor-net
     ports:
       - 3307:3306
+      - 9104:9104
     volumes:
       - db-stream:/var/lib/mysql
-      - ./table.sql:/docker-entrypoint-initdb.d/table.sql
+      - ./sql:/docker-entrypoint-initdb.d/
+      - ./docker/prom-config-db.sh:/home/prometheus/prom-config-db.sh
+      - ./mysqld_exporter-0.12.1.linux-amd64.tar.gz:/home/prometheus/mysqld_exporter-0.12.1.linux-amd64.tar.gz
     command: --innodb_use_native_aio=0 --socket=/tmp/mysql.sock --bind_address=0.0.0.0
 
   prometheus:
@@ -41,6 +45,8 @@ services:
   grafana:
     image: grafana/grafana:6.7.2
     container_name: grafana
+    depends_on: 
+      - prometheus
     volumes:
       - grafana_data:/var/lib/grafana
       - ./infra/grafana/provisioning:/etc/grafana/provisioning
@@ -63,8 +69,9 @@ services:
     env_file: ./.env
     depends_on:
       - db-stream
-    image: app-streams
+    image: app
     build: .
+    entrypoint: /home/node/app/docker/entrypoint.sh
     volumes:
       - ./:/home/node/app
     ports:

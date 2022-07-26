@@ -14,8 +14,8 @@ RUN npm install
 USER node
 COPY --chown=node . .
 
-RUN chmod +x .docker/entrypoint.sh
-ENTRYPOINT .docker/entrypoint.sh
+RUN chmod +x docker/entrypoint.sh
+ENTRYPOINT docker/entrypoint.sh
 
 EXPOSE 3001
 
