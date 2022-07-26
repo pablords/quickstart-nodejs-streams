@@ -2,7 +2,15 @@ const API_URL = "http://localhost:3001"
 const ON_UPLOAD_EVENT = "file-uploaded"
 let bytesAmount = 0;
 
+
+
+
 window.onload = function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl)
+    })
+
     const ioClient = io.connect(API_URL, { withCredentials: false });
     ioClient.on("connect", (msg) => {
         console.log("connected!", ioClient.id)
@@ -13,6 +21,9 @@ window.onload = function () {
 
     ioClient.on(ON_UPLOAD_EVENT, (bytesReceived) => {
         bytesAmount = bytesAmount - bytesReceived;
+        if (bytesAmount == 0) {
+            toastList[0].show()
+        }
         updateSizeBytes(bytesAmount)
         //updateProgress(bytesReceived)
         // setTimeout(() => {
@@ -44,7 +55,7 @@ const updateSizeBytes = (size) => {
 
 const updateProgress = (bytesReceived) => {
     const calc = bytesReceived / bytesAmount * 100
-    console.log({bytes: bytesReceived, amount: bytesAmount})
+    console.log({ bytes: bytesReceived, amount: bytesAmount })
     const div = document.querySelector(".progress-bar")
     div.style.width = `${calc}%`
     div.innerHTML = `${calc}%`
@@ -59,11 +70,6 @@ const configureForm = (targetUrl) => {
         const alert = document.querySelector(".alert-danger")
         alert.style.display = "none"
 
-        if (file.size == 0) {
-            alert.innerHTML = "Por favor insira um arquivo"
-            alert.style.display = "block"
-            return
-        }
 
         axios
             .post(targetUrl, formData, {
@@ -82,12 +88,25 @@ const configureForm = (targetUrl) => {
 
 
 const handleFileSize = () => {
+    const button = document.querySelector("button")
+    button.classList.remove("disabled")
     const alert = document.querySelector(".alert-danger")
     alert.style.display = "none"
     const { files: fileElements } = document.getElementById("file");
     if (!fileElements.length) return;
     const files = Array.from(fileElements)
     const { size } = files.reduce((prev, next) => ({ size: prev.size + next.size }), { size: 0 });
+
+
+
+    const filesValidated = files.filter(file => file.type !== "text/csv")
+    if (filesValidated.length > 0) {
+        button.classList.add("disabled")
+        alert.innerHTML = "Por favor insira um arquivo CSV"
+        alert.style.display = "block"
+        return
+    }
+
     bytesAmount = size
     updateSizeBytes(size)
 }

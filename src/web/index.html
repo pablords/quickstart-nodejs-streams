@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Uploads</title>
+    <title>Uploads CSV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 </head>
@@ -17,14 +17,26 @@
         </script>
 
     <div class="container">
-        <h1 style="margin-top: 30px;">Upload Multiples Files</h1>
-        <form style="margin-top: 30px; display: flex;flex-direction: column;" id="form-file" method="POST" enctype="multipart/form-data">
+        <h1 style="margin-top: 30px;">Uploads CSV</h1>
+        <form style="margin-top: 30px; display: flex;flex-direction: column;" id="form-file" method="POST"
+            enctype="multipart/form-data">
             <input type="file" id="file" name="filefield" onchange="handleFileSize()" multiple>
             <span style="margin-top: 10px;" id="size"></span>
             <button style="margin-top: 10px; max-width: 100px;" type="submit" class="btn btn-primary">Enviar</button>
         </form>
 
         <div class="alert alert-danger" role="alert" style="margin-top: 20px; display: none;"></div>
+
+        <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive"
+            aria-atomic="true" style="position: absolute; bottom: 10px; right: 10px;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Upload efetuado com sucesso.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 </body>
 <script src="app.js"></script>
