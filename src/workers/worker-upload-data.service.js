@@ -66,7 +66,7 @@ export class UploadFile {
         })
     }
 
-    #writeOnFile() {
+    #writeOnDataBase() {
         return new Writable({
             write(chunk, encoding, cb) {
                 UploadFile.insertDataIntoDb(chunk)
@@ -75,12 +75,13 @@ export class UploadFile {
         })
     }
 
-    static async insertDataIntoDb(row) {
-        const data = JSON.parse(row)
+    static async insertDataIntoDb(rows) {
+        const data = JSON.parse(rows)
         const poolNumber = Math.floor(Math.random() * pools.length)
         const pool = pools[poolNumber]
         pool.query = promisify(pool.query)
         await pool.query('INSERT INTO stream SET ?', data)
+
     }
 
 
@@ -91,7 +92,7 @@ export class UploadFile {
             this.#handleFileBytes.apply(this, [info]),
             csvtoJson(),
             this.#updateKeys.apply(),
-            this.#writeOnFile.apply()
+            this.#writeOnDataBase.apply()
         )
         logger.info(`File [${name}] Finished`)
     }
