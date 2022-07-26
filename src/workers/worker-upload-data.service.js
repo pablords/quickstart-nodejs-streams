@@ -67,20 +67,25 @@ export class UploadFile {
     }
 
     #writeOnDataBase() {
+        let batch = []
         return new Writable({
             write(chunk, encoding, cb) {
-                UploadFile.insertDataIntoDb(chunk)
+                const data = JSON.parse(chunk)
+                batch.push(data)
+                if (batch.length == 300) {
+                    UploadFile.insertDataIntoDb(batch)
+                    batch = []
+                }
                 cb()
             }
         })
     }
 
     static async insertDataIntoDb(rows) {
-        const data = JSON.parse(rows)
         const poolNumber = Math.floor(Math.random() * pools.length)
         const pool = pools[poolNumber]
         pool.query = promisify(pool.query)
-        await pool.query('INSERT INTO stream SET ?', data)
+        await pool.query('INSERT INTO stream SET ?', rows)
 
     }
 
