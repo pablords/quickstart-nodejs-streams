@@ -98,7 +98,6 @@ const handleFileSize = () => {
     const { size } = files.reduce((prev, next) => ({ size: prev.size + next.size }), { size: 0 });
 
 
-
     const filesValidated = files.filter(file => file.type !== "text/csv")
     if (filesValidated.length > 0) {
         button.classList.add("disabled")

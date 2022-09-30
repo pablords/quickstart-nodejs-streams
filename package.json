@@ -8,8 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --max-old-space-size=1024 src/",
     "dev": "nodemon -r dotenv/config src/server.js",
-    "web": "npx lite-server -c src/web/bs-config.json",
-    "dev:cluster": "nodemon -r dotenv/config src/server-cluster.js",
+    "web": "npx lite-server -c web/bs-config.json",
     "test:load": "node tests/load-test.js"
   },
   "engines": {

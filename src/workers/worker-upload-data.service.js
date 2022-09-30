@@ -32,7 +32,7 @@ export class UploadFile {
         async function* handleData(data) {
             for await (const item of data) {
                 const size = item.length
-                //logger.info(`File [${info.filename}] got ${size} lines to ${this.#socketId}`)
+                logger.info(`File [${info.filename}] got ${size} lines to ${this.#socketId}`)
                 this.#io.to(this.#socketId).emit(FILE_EVENT_NAME, size)
                 yield item
             }

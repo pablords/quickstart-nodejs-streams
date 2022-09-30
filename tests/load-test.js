@@ -5,7 +5,7 @@ import autocannon from "autocannon"
 async function foo() {
     const result = await autocannon({
         url: 'http://localhost:3001/query-data',
-        connections: 500, //default
+        connections: 800, //default
         pipelining: 1, // default
         duration: 30,
         title: "Teste de carga select database"
